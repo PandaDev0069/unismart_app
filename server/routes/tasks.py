@@ -1,40 +1,32 @@
 from flask import Blueprint, request, jsonify
 import sqlite3
 
-tasks_bp = Blueprint("tasks", __name__)  # Ensure this line exists
+tasks_bp = Blueprint("tasks", __name__)
 
-# Database setup
 def get_db_connection():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     return conn
 
-# Save tasks to database at the end of session
-@tasks_bp.route("/api/save_tasks", methods=["POST", "OPTIONS"])
-def save_tasks():
-    if request.method == "OPTIONS":
-        return jsonify({"message": "CORS preflight request success"}), 200  # Handle preflight request
-
+# Add new task
+@tasks_bp.route("/api/add_task", methods=["POST"])
+def add_task():
     try:
         data = request.json
-        tasks = data.get("tasks", [])
+        task_id = data.get("id")
+        task_text = data.get("text")
 
         conn = get_db_connection()
         cursor = conn.cursor()
-
-        for task in tasks:
-            cursor.execute("INSERT OR IGNORE INTO tasks (id, text) VALUES (?, ?)", (task["id"], task["text"]))
-
+        cursor.execute("INSERT INTO tasks (id, text) VALUES (?, ?)", (task_id, task_text))
         conn.commit()
         conn.close()
-        return jsonify({"message": "Tasks saved successfully"}), 200
+
+        return jsonify({"message": "Task added successfully"}), 200
     except Exception as e:
-        print("❌ Error saving tasks:", e)
         return jsonify({"error": str(e)}), 500
 
-
-
-# Load tasks from database at the start of session
+# Get tasks
 @tasks_bp.route("/api/get_tasks", methods=["GET"])
 def get_tasks():
     try:
@@ -45,22 +37,16 @@ def get_tasks():
         conn.close()
 
         tasks_list = [{"id": row["id"], "text": row["text"]} for row in tasks]
-
-        print("✅ API Response:", tasks_list)  # Debugging log
         return jsonify({"tasks": tasks_list}), 200
     except Exception as e:
-        print("❌ API Error:", e)  # Debugging log
         return jsonify({"error": str(e)}), 500
 
-
-    
-
+# Delete task
 @tasks_bp.route("/api/delete_task/<int:id>", methods=["DELETE"])
 def delete_task(id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
         cursor.execute("DELETE FROM tasks WHERE id=?", (id,))
         conn.commit()
         conn.close()
