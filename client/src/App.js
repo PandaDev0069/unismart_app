@@ -1,14 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Tasks from "./pages/Tasks";
 
 function Home() {
   return <h2>Welcome to UniSmart!</h2>;
 }
 
-function Tasks() {
-  return <h2>Task Manager Coming Soon!</h2>;
-}
 
 function Notes() {
   return <h2>Note-Taking System Coming Soon!</h2>;
