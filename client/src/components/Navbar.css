@@ -34,3 +34,9 @@ body {
     text-align: center;
   }
 }
+
+.logo {
+  height: 40px; /* Adjust size */
+  width: auto;
+  border-radius: 5px;
+} 
