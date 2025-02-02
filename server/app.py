@@ -1,9 +1,10 @@
-from flask import Flask, jsonify
+from flask import Flask
 from flask_cors import CORS
 from routes.tasks import tasks_bp
 
 app = Flask(__name__)
-CORS(app)  # Allows React to access Flask
+
+CORS(app, resources={r"/api/*": {"origins": "*"}})  # Allow all API requests
 
 app.register_blueprint(tasks_bp)
 

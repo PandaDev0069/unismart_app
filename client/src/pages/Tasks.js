@@ -22,23 +22,40 @@ function Tasks() {
     setTaskInput("");
   };
 
-  const handleDeleteTask = (taskId) => {
+  const handleDeleteTask = async (taskId) => {
+    // Remove from UI
     setTasks(tasks.filter(task => task.id !== taskId));
+
+    // Send request to Flask to delete task from database
+    try {
+      await fetch(`http://127.0.0.1:5000/api/delete_task/${taskId}`, {
+        method: "DELETE",
+      });
+      console.log(`Task ${taskId} deleted from database`);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
   // function to send tasks to Flask when session ends
   const saveTasksToDatabase = async () => {
     try {
-        await fetch("http://127.0.0.1:5000/api/save_tasks", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tasks }),
-        });
-        console.log("Tasks saved to database");
-        } catch (error) {
-            console.error("Error saving tasks:", error);
-        }
+      const response = await fetch("http://127.0.0.1:5000/api/save_tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",  // 🔹 Make sure it's sending JSON
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ tasks }),
+      });
+  
+      const data = await response.json();
+      console.log("✅ Save response:", data);
+    } catch (error) {
+      console.error("❌ Error saving tasks:", error);
+    }
   };
+  
 
   // Listen for session ending (tab close or page refresh)
   useEffect(() => {
@@ -49,20 +66,22 @@ function Tasks() {
   }, [tasks]);
 
   useEffect(() => {
-    // Load tasks from database when the session starts
     const fetchTasksFromDatabase = async () => {
       try {
-        const response = await  fetch("http:127.0.0.1:5000/api/get_tasks");
-        const data = await response.json();
+        const response = await fetch("http://127.0.0.1:5000/api/get_tasks");
+        const text = await response.text(); // Get raw response text
+        console.log("🔍 Raw API Response:", text); // Debugging log
+  
+        const data = JSON.parse(text); // Convert to JSON
         setTasks(data.tasks);
       } catch (error) {
-        console.error("Error fetching tasks:", error);
+        console.error("❌ Error fetching tasks:", error);
       }
     };
-    
+  
     fetchTasksFromDatabase();
   }, []);
-
+  
   return (
     <div className="tasks-container">
       <h2>Task Manager</h2>
