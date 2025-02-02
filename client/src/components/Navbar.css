@@ -1,0 +1,36 @@
+body {
+  background-color: #121212; /* Dark background */
+  color: #e0e0e0; /* Light text */
+  font-family: "Arial", sans-serif;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-buttons .btn {
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background-color: #1e1e1e; /* Darker background for buttons */
+  color: #ffffff !important; /* White text */
+  border: 2px solid #333;
+  transition: all 0.3s ease;
+}
+
+.nav-buttons .btn:hover {
+  background-color: #333; /* Slight hover effect */
+}
+
+@media (max-width: 768px) {
+  .nav-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
