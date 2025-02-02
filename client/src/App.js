@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Tasks from "./pages/Tasks";
+import Calendar from "./components/Calendar";
 
 function Home() {
   return <h2>Welcome to UniSmart!</h2>;
@@ -28,6 +29,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/tasks" element={<Tasks />} />
+          <Route path="/calendar" element={<Calendar />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/code" element={<CodeEditor />} />
           <Route path="/wellness" element={<Wellness />} />
