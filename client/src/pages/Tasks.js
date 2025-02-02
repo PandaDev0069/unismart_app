@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use} from "react";
 import "./Tasks.css";
 
 function Tasks() {
@@ -47,6 +47,21 @@ function Tasks() {
         window.removeEventListener("beforeunload", saveTasksToDatabase);
     };
   }, [tasks]);
+
+  useEffect(() => {
+    // Load tasks from database when the session starts
+    const fetchTasksFromDatabase = async () => {
+      try {
+        const response = await  fetch("http:127.0.0.1:5000/api/get_tasks");
+        const data = await response.json();
+        setTasks(data.tasks);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+    
+    fetchTasksFromDatabase();
+  }, []);
 
   return (
     <div className="tasks-container">

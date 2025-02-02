@@ -19,15 +19,30 @@ def save_tasks():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Clear old session tasks before inserting new ones
-        cursor.execute("DELETE FROM tasks")
 
-        # Insert new tasks
+        # Insert new tasks withpout deleting old ones
         for task in tasks:
-            cursor.execute("INSERT INTO tasks (id, text) VALUES (?, ?)", (task["id"], task["text"]))
+            cursor.execute("INSERT OR IGNORE INTO tasks (id, text) VALUES (?, ?)", (task["id"], task["text"]))
 
         conn.commit()
         conn.close()
         return jsonify({"message": "Tasks saved successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Load tasks from database at the start of session
+@tasks_bp.route("/api/load_tasks", methods=["GET"])
+def get_tasks():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM tasks")
+        tasks = cursor.fetchall()
+        conn.close()
+
+        # Convert database rows to JSON
+        tasks_list = [{"id": row["id"], "text": row["text"]} for row in tasks]
+
+        return jsonify({"tasks": tasks_list}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
