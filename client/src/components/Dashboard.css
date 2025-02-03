@@ -1,0 +1,46 @@
+.dashboard-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.back-btn {
+  background-color: #ff4757;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.timestamp {
+  display: flex;
+  align-items: center;
+  background: #292929;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+
+.timestamp input {
+  flex: 1;
+  margin-left: 10px;
+  padding: 5px;
+  background: #333;
+  color: white;
+  border: none;
+}
+
+.timestamp button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 10px;
+}

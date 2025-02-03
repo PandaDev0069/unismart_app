@@ -13,14 +13,15 @@ def setup_database():
         )
     ''')
 
-    # Create events table with proper timestamp
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS events (
+    # Create reminders table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS reminders (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            start TEXT NOT NULL  -- Store events with full datetime format
+            date TEXT NOT NULL,
+            time TEXT NOT NULL,
+            text TEXT NOT NULL
         )
-    ''')
+    """)
 
     conn.commit()
     conn.close()
