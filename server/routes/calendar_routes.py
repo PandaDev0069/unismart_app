@@ -23,20 +23,21 @@ def get_events():
         return jsonify({"error": str(e)}), 500
 
 # Route to add a new event
-@calendar_bp.route("/api/add-event", methods=["POST"])
+@calendar_bp.route("/api/add_event", methods=["POST"])
 def add_event():
     try:
         data = request.json
-        title = data["title"]
-        date = data["date"]
+        title = data.get("title")
+        start = data.get("start")  # Store full timestamp
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO events (title, start) VALUES (?, ?)", (title, date))
+        cursor.execute("INSERT INTO events (title, start) VALUES (?, ?)", (title, start))
         conn.commit()
+        event_id = cursor.lastrowid
         conn.close()
 
-        return jsonify({"message": "Event added successfully"}), 201
+        return jsonify({"success": True, "id": event_id}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

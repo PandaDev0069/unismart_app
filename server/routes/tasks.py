@@ -13,18 +13,20 @@ def get_db_connection():
 def add_task():
     try:
         data = request.json
-        task_id = data.get("id")
         task_text = data.get("text")
+        due_date = data.get("due_date")  # Get due date from frontend
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO tasks (id, text) VALUES (?, ?)", (task_id, task_text))
+        cursor.execute("INSERT INTO tasks (text, due_date) VALUES (?, ?)", (task_text, due_date))
         conn.commit()
+        new_task_id = cursor.lastrowid
         conn.close()
 
-        return jsonify({"message": "Task added successfully"}), 200
+        return jsonify({"message": "Task added successfully", "id": new_task_id}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 # Get tasks
 @tasks_bp.route("/api/get_tasks", methods=["GET"])
@@ -36,7 +38,7 @@ def get_tasks():
         tasks = cursor.fetchall()
         conn.close()
 
-        tasks_list = [{"id": row["id"], "text": row["text"]} for row in tasks]
+        tasks_list = [{"id": row["id"], "text": row["text"], "due_date": row["due_date"]} for row in tasks]
         return jsonify({"tasks": tasks_list}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
