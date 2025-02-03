@@ -1,0 +1,61 @@
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;  /* Centers vertically */
+    justify-content: center;  /* Centers horizontally */
+    background: rgba(0, 0, 0, 0.6); /* Adds a semi-transparent overlay */
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    width: 50%; /* Ensures proper width */
+    max-width: 600px;
+    min-width: 300px;
+    background: #292929;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.929);
+    text-align: center;
+  }
+  
+  .modal-content textarea {
+    width: 100%;
+    min-height: 80px;
+    max-height: 200px;
+    resize: vertical;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background: #1e1e1e;
+    color: white;
+    font-size: 16px;
+  }
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-evenly; /* 🔹 Keep buttons spaced properly */
+  margin-top: 10px;
+}
+
+.cancel-btn, .save-btn {
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  width: 120px; /* 🔹 Reduce width */
+}
+
+.cancel-btn {
+  background: red;
+  color: white;
+}
+
+.save-btn {
+  background: green;
+  color: white;
+}

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Tasks from "./pages/Tasks";
 import Calendar from "./components/Calendar";
+import Dashboard from "./components/Dashboard";
 
 function Home() {
   return <h2>Welcome to UniSmart!</h2>;
@@ -30,6 +31,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/dashboard/:date" element={<Dashboard />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/code" element={<CodeEditor />} />
           <Route path="/wellness" element={<Wellness />} />

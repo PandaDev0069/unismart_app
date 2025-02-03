@@ -1,46 +1,128 @@
+/* Dashboard Container */
 .dashboard-container {
   max-width: 800px;
   margin: auto;
   padding: 20px;
   background-color: #1e1e1e;
-  color: white;
+  color: #fff;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.back-btn {
-  background-color: #ff4757;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-bottom: 15px;
-}
-
-.timestamp {
+/* Header */
+.dashboard-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   background: #292929;
   padding: 10px;
-  margin: 5px 0;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
-.timestamp input {
-  flex: 1;
-  margin-left: 10px;
+/* Time-Stamps Section */
+.timestamps-section {
+  background: #292929;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.time-slot button {
+  background: #4CAF50;
+  color: white;
+  border: none;
   padding: 5px;
-  background: #333;
-  color: white;
-  border: none;
+  cursor: pointer;
 }
 
-.timestamp button {
-  background-color: #4CAF50;
+.reminder-input {
+  display: flex;
+  gap: 5px;
+}
+
+.reminder-input input {
+  flex: 1;
+  padding: 5px;
+}
+
+.reminder-input button {
+  background: #007bff;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 5px;
   cursor: pointer;
-  margin-left: 10px;
+}
+
+/* To-Do List */
+.todo-widget {
+  background: #292929;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.todo-widget ul {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-widget li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.todo-widget li.completed {
+  text-decoration: line-through;
+  color: #bbb;
+}
+
+.todo-widget button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+/* Floating Add Button */
+.add-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #292929;
+  padding: 20px;
+  border-radius: 8px;
 }
