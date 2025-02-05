@@ -3,7 +3,7 @@ import sqlite3
 
 reminders_bp = Blueprint("reminders", __name__)
 
-#Database connection
+# Database connection
 def get_db_connection():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
@@ -18,10 +18,12 @@ def get_reminders(date):
         cursor.execute("SELECT * FROM reminders WHERE date=?", (date,))
         reminders = {row["time"]: row["text"] for row in cursor.fetchall()}
         conn.close()
+        print(f"Reminders for {date}: {reminders}")  # Debugging statement
         return jsonify({"reminders": reminders}), 200
     except Exception as e:
+        print(f"Error fetching reminders: {e}")  # Debugging statement
         return jsonify({"error": str(e)}), 500
-    
+
 # Add a reminder
 @reminders_bp.route("/api/add_reminder", methods=["POST"])
 def add_reminder():
@@ -45,15 +47,14 @@ def add_reminder():
         return jsonify({"error": str(e)}), 500
 
 # Delete a reminder
-@reminders_bp.route("/api/delete_reminder/<int:reiminder_id>", methods=["DELETE"])
-def delete_reminder(reiminder_id):
+@reminders_bp.route("/api/delete_reminder/<int:reminder_id>", methods=["DELETE"])
+def delete_reminder(reminder_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM reminders WHERE id = ?", (reiminder_id))
+        cursor.execute("DELETE FROM reminders WHERE id = ?", (reminder_id,))
         conn.commit()
         conn.close()
         return jsonify({"success": True}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    

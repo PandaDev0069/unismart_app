@@ -4,9 +4,14 @@ export const getTasksByDate = async (date) => {
   try {
     const response = await fetch(`${BASE_URL}/get_tasks/${date}`);
     if (!response.ok) throw new Error("Failed to fetch tasks");
-    return await response.json();
+
+    const data = await response.json();
+    console.log("Fetched Reminders: ", data);
+
+    return data || { reminders: {} };
   } catch (error) {
     console.error("Error fetching tasks:", error);
+    return { tasks: [] };
   }
 };
 
@@ -17,13 +22,13 @@ export const getRemindersByDate = async (date) => {
     return await response.json();
   } catch (error) {
     console.error("Error fetching reminders:", error);
-    return { reminders: []};
+    return { reminders: [] };
   }
 };
 
 export const addTask = async (taskData) => {
   try {
-    const response = await fetch(`${BASE_URL}/add_task`,{
+    const response = await fetch(`${BASE_URL}/add_task`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(taskData),
@@ -37,9 +42,9 @@ export const addTask = async (taskData) => {
 
 export const addReminder = async (reminderData) => {
   try {
-    const response = await fetch(`${BASE_URL}/add_reminder`,{
+    const response = await fetch(`${BASE_URL}/add_reminder`, {
       method: "POST",
-      headers: { "Content-Typer": "application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(reminderData),
     });
     if (!response.ok) throw new Error("Failed to add reminder");
