@@ -58,6 +58,25 @@ def update_task(task_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# Edit a task
+@tasks_bp.route("/api/edit_task/<int:task_id>", methods=["PUT"])
+def edit_task(task_id):
+    try:
+        data = request.get_json()
+        new_text = data.get("text")
+        if not new_text:
+            return jsonify({"error": "Missing fields"}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE tasks SET text = ? WHERE id = ?", (new_text, task_id))
+        conn.commit()
+        conn.close()
+
+        return jsonify({"message": "Task updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Delete task
 @tasks_bp.route("/api/delete_task/<int:task_id>", methods=["DELETE"])
 def delete_task(task_id):

@@ -19,10 +19,14 @@ export const getRemindersByDate = async (date) => {
   try {
     const response = await fetch(`${BASE_URL}/get_reminders/${date}`);
     if (!response.ok) throw new Error("Failed to fetch reminders");
-    return await response.json();
+    const data = await response.json();
+    console.log("Raw reminders data:", data); // Debug log
+    return {
+      reminders: data.reminders || {}
+    };
   } catch (error) {
     console.error("Error fetching reminders:", error);
-    return { reminders: [] };
+    return { reminders: {} };
   }
 };
 
@@ -51,5 +55,35 @@ export const addReminder = async (reminderData) => {
     return await response.json();
   } catch (error) {
     console.error("Error adding reminder:", error);
+  }
+};
+
+export const editTask = async (taskId, newText) => {
+  try {
+    const response = await fetch(`${BASE_URL}/edit_task/${taskId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: newText }),
+    });
+    if (!response.ok) throw new Error("Failed to edit task");
+    return await response.json();
+  } catch (error) {
+    console.error("Error editing task:", error);
+  }
+};
+
+export const editReminder = async (reminderId, text) => {
+  try {
+    const response = await fetch(`${BASE_URL}/edit_reminder/${reminderId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+    const data = await response.json();
+    console.log("Edit reminder response:", data); // Debug log
+    return data;
+  } catch (error) {
+    console.error("Error editing reminder:", error);
+    throw error;
   }
 };

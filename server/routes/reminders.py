@@ -15,13 +15,26 @@ def get_reminders(date):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
+        print(f"Fetching reminders for date: {date}")  # Debug log
         cursor.execute("SELECT * FROM reminders WHERE date=?", (date,))
-        reminders = {row["time"]: row["text"] for row in cursor.fetchall()}
+        rows = cursor.fetchall()
+        
+        # Group reminders by time
+        reminders = {}
+        for row in rows:
+            time = row['time']
+            if time not in reminders:
+                reminders[time] = []
+            reminders[time].append({
+                'id': row['id'],
+                'text': row['text']
+            })
+        
+        print(f"Reminders found: {reminders}")  # Debug log
         conn.close()
-        print(f"Reminders for {date}: {reminders}")  # Debugging statement
         return jsonify({"reminders": reminders}), 200
     except Exception as e:
-        print(f"Error fetching reminders: {e}")  # Debugging statement
+        print(f"Error in get_reminders: {str(e)}")  # Debug log
         return jsonify({"error": str(e)}), 500
 
 # Add a reminder
@@ -58,3 +71,23 @@ def delete_reminder(reminder_id):
         return jsonify({"success": True}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Edit a reminder
+@reminders_bp.route("/api/edit_reminder/<int:reminder_id>", methods=["PUT"])
+def edit_reminder(reminder_id):
+    try:
+        data = request.get_json()
+        text = data.get("text")
+        
+        if not text:
+            return jsonify({"error": "Missing text field"}), 400
+            
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE reminders SET text = ? WHERE id = ?", (text, reminder_id))
+        conn.commit()
+        conn.close()
+        
+        return jsonify({"message": "Reminder updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
