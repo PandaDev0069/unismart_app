@@ -1,6 +1,3 @@
-Certainly! Here's a comprehensive `README.md` file for your UniSmart project, reflecting the current progress and structure:
-
-```markdown
 # UniSmart
 
 UniSmart is an AI-powered university assistant designed to enhance student productivity and well-being. It integrates task management, note-taking, code execution, and wellness tracking into a unified platform.
