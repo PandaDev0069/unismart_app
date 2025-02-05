@@ -160,7 +160,7 @@ const Dashboard = () => {
                   </div>
                 ))
               ) : (
-                <span className="no-reminder">No Reminder</span>
+                <span className="no-reminder"></span>
               )}
             </div>
             <button 
