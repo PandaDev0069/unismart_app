@@ -26,7 +26,7 @@ def get_reminders(date):
 @reminders_bp.route("/api/add_reminder", methods=["POST"])
 def add_reminder():
     try:
-        data = request.json
+        data = request.get_json()
         time = data.get("time")
         text = data.get("text")
         date = data.get("date")
@@ -43,3 +43,17 @@ def add_reminder():
         return jsonify({"success": True}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# Delete a reminder
+@reminders_bp.route("/api/delete_reminder/<int:reiminder_id>", methods=["DELETE"])
+def delete_reminder(reiminder_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM reminders WHERE id = ?", (reiminder_id))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    

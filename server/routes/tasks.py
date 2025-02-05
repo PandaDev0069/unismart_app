@@ -12,9 +12,12 @@ def get_db_connection():
 @tasks_bp.route("/api/add_task", methods=["POST"])
 def add_task():
     try:
-        data = request.json
+        data = request.get_json()
         task_text = data.get("text")
         due_date = data.get("due_date")  # Get due date from frontend
+
+        if not task_text or not due_date:
+            return jsonify({'error': 'Missing task text or date'}), 400
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -28,9 +31,9 @@ def add_task():
         return jsonify({"error": str(e)}), 500
 
 
-# Get tasks
-@tasks_bp.route("/api/get_tasks", methods=["GET"])
-def get_tasks():
+# Get tasks for a specific date
+@tasks_bp.route("/api/get_tasks/<date>", methods=["GET"])
+def get_tasks(date):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -38,18 +41,32 @@ def get_tasks():
         tasks = cursor.fetchall()
         conn.close()
 
-        tasks_list = [{"id": row["id"], "text": row["text"], "due_date": row["due_date"]} for row in tasks]
+        tasks_list = [{"id": row["id"], "text": row["text"], "due_date": row["due_date"], "completed": row["completed"]} for row in tasks]
         return jsonify({"tasks": tasks_list}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Delete task
-@tasks_bp.route("/api/delete_task/<int:id>", methods=["DELETE"])
-def delete_task(id):
+# Update a task (mark as completed)
+@tasks_bp.route("/api/update_task/<int:task_id>", methods=["PUT"])
+def update_task(task_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM tasks WHERE id=?", (id,))
+        cursor.execute("UPDATE tasks SET completed = 1 WHERE id = ?", (task_id))
+        conn.commit()
+        conn.close()
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# Delete task
+@tasks_bp.route("/api/delete_task/<int:task_id>", methods=["DELETE"])
+def delete_task(task_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id))
         conn.commit()
         conn.close()
 

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getTasksByDate, getRemindersByDate } from "../API";
 import { useParams, useNavigate } from "react-router-dom";
 import ReminderModal from "./ReminderModal";
 import "./Dashboard.css";
@@ -6,7 +7,7 @@ import "./Dashboard.css";
 const Dashboard = () => {
   const { date } = useParams(); // Get the selected date
   const [reminders, setReminders] = useState({}); // Store reminders by time slot
-  const [todos, setTodos] = useState([]); // Store to-do list items
+  const [tasks, setTasks] = useState([]); // Store to-do list items
   const [selectedTime, setSelectedTime] = useState(null); // Store time slot being edited
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal for adding tasks
   const navigate = useNavigate();
@@ -15,6 +16,19 @@ const Dashboard = () => {
     setSelectedTime(time);
     setIsModalOpen(true);
   };
+
+  /// Fetch data when selectedDate changes
+  useEffect(() =>{
+    const fetchData = async () => {
+      const tasksData = await getTasksByDate(date);
+      const remindersData = await getRemindersByDate(date);
+
+      setTasks(tasksData.tasks || []);
+      setReminders(remindersData.reminders || []);
+    }
+    fetchData();
+  }, [date]);
+
 
   const handleSaveReminder = (text) => {
     setReminders((prev) => ({
@@ -67,21 +81,21 @@ const Dashboard = () => {
     
 
              {/* To-Do List */}
-      <ToDoList todos={todos} setTodos={setTodos} />
+      <TaskList tasks={tasks} setTasks={setTasks} />
     </div>
   );
 }; 
 
-const ToDoList = ({ todos, setTodos }) => {
+const TaskList = ({ tasks , setTasks }) => {
     const addTask = () => {
       const taskText = prompt("Enter new task:");
       if (taskText) {
-        setTodos([...todos, { id: Date.now(), text: taskText, completed: false }]);
+        setTasks([...tasks, { id: Date.now(), text: taskText, completed: false }]);
       }
     };
   
     const toggleTaskCompletion = (index) => {
-      setTodos((prev) =>
+      setTasks((prev) =>
         prev.map((task, i) =>
           i === index ? { ...task, completed: !task.completed } : task
         )
@@ -89,14 +103,14 @@ const ToDoList = ({ todos, setTodos }) => {
     };
   
     const deleteTask = (index) => {
-      setTodos((prev) => prev.filter((_, i) => i !== index));
+      setTasks((prev) => prev.filter((_, i) => i !== index));
     };
   
     return (
       <div className="todo-widget">
         <h3>To-Do List</h3>
         <ul>
-          {todos.map((task, index) => (
+          {tasks.map((task, index) => (
             <li key={task.id} className={task.completed ? "completed" : ""}>
               <input type="checkbox" checked={task.completed} onChange={() => toggleTaskCompletion(index)} />
               {task.text}
