@@ -4,10 +4,8 @@ import Navbar from "./components/Navbar";
 import HomePage from "./components/Home";
 import Calendar from "./components/Calendar";
 import Dashboard from "./components/Dashboard";
+import Notes from "./components/Notes";
 
-function Notes() {
-  return <h2>Note-Taking System Coming Soon!</h2>;
-}
 
 function CodeEditor() {
   return <h2>AI-Powered Code Editor Coming Soon!</h2>;

@@ -121,3 +121,54 @@ export const toggleTaskCompletion = async (taskId) => {
     throw error;
   }
 };
+
+export const getNotes = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/get_notes`);
+    if (!response.ok) throw new Error("Failed to fetch notes");
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching notes:", error);
+    return { notes: [] };
+  }
+};
+
+export const addNote = async (noteData) => {
+  try {
+    const response = await fetch(`${BASE_URL}/add_note`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(noteData),
+    });
+    if (!response.ok) throw new Error("Failed to add note");
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding note:", error);
+  }
+};
+
+export const editNote = async (noteId, noteData) => {
+  try {
+    const response = await fetch(`${BASE_URL}/edit_note/${noteId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(noteData),
+    });
+    if (!response.ok) throw new Error("Failed to edit note");
+    return await response.json();
+  } catch (error) {
+    console.error("Error editing note:", error);
+  }
+};
+
+export const deleteNote = async (noteId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/delete_note/${noteId}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error("Failed to delete note");
+    return await response.json();
+  } catch (error) {
+    console.error("Error deleting note:", error);
+  }
+};
