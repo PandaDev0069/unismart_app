@@ -1,0 +1,135 @@
+/* Base styles */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #121212;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+
+.homepage-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #e0e0e0;
+  background-color: #121212;
+  min-height: 100vh;
+}
+
+.hero-section {
+  background-color: #1a1a1a;
+  padding: 40px 20px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.features-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+}
+
+.feature {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.homepage-header {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #ffffff;
+}
+
+.homepage-content {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  background: #2d2d2d;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.feature-card h3 {
+  color: #4dabf7;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  color: #b0b0b0;
+  line-height: 1.6;
+}
+
+.get-started-btn {
+  display: inline-block;
+  background: #1c7ed6;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+  border: none;
+  font-weight: bold;
+}
+
+.get-started-btn:hover {
+  background: #1971c2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Hero Image Styles */
+.hero-image {
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+  transition: transform 0.3s ease;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* Feature Images */
+.feature img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .hero-image {
+    max-width: 150px;
+  }
+  
+  .feature img {
+    width: 60px;
+    height: 60px;
+  }
+}

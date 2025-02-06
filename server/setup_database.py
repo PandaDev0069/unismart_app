@@ -25,6 +25,17 @@ def setup_database():
         )
     """)
 
+    # Create notes database
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+
     conn.commit()
     conn.close()
 
@@ -75,5 +86,5 @@ def populate_database():
 
 if __name__ == "__main__":
     setup_database()
-    populate_database()
+    # populate_database()
     print("✅ Database setup completed.")

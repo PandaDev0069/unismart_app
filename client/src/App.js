@@ -1,13 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import HomePage from "./components/Home";
 import Calendar from "./components/Calendar";
 import Dashboard from "./components/Dashboard";
-
-function Home() {
-  return <h2>Welcome to UniSmart!</h2>;
-}
-
 
 function Notes() {
   return <h2>Note-Taking System Coming Soon!</h2>;
@@ -27,7 +23,7 @@ function App() {
       <Navbar />  {/* Ensure this is present */}
       <div className="container mt-4">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/dashboard/:date" element={<Dashboard />} />
           <Route path="/notes" element={<Notes />} />
