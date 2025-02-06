@@ -7,6 +7,7 @@ const Files = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("Lecture Notes");
 
   useEffect(() => {
     fetchFiles();
@@ -34,6 +35,7 @@ const Files = () => {
       setError(null);
       const formData = new FormData();
       formData.append("file", selectedFile);
+      formData.append("category", selectedCategory);
 
       await uploadFile(formData);
       await fetchFiles();
@@ -62,7 +64,7 @@ const Files = () => {
 
   return (
     <div className="files-container">
-      <h2>📂 File Upload</h2>
+      <h2>📂 File Upload & Categorization</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       
       <div className="upload-section">
@@ -72,6 +74,20 @@ const Files = () => {
             onChange={(e) => setSelectedFile(e.target.files[0])}
             disabled={loading}
           />
+          
+          {/* Category Dropdown */}
+          <select 
+            value={selectedCategory} 
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            disabled={loading}
+          >
+            <option value="">Select Category</option>
+            <option value="Lecture Notes">Lecture Notes</option>
+            <option value="Assignments">Assignments</option>
+            <option value="Reference Materials">Reference Materials</option>
+            <option value="Other Documents">Other Documents</option>
+          </select>
+
           <button 
             type="submit" 
             disabled={!selectedFile || loading}

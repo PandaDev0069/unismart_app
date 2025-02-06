@@ -23,28 +23,28 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Upload file
-@file_upload_bp.route("/api/upload", methods=["POST"])
+@file_upload_bp.route("/api/upload_file", methods=["POST"])
 def upload_file():
     try:
-        if "file" not in request.files:
-            return jsonify({"error": "No file part"}), 400
+        if "file" not in request.files or "category" not in request.form:
+            return jsonify({"error": "Missing file or category"}), 400
 
         file = request.files["file"]
-        if file.filename == "" or not allowed_file(file.filename):
-            return jsonify({"error": "Invalid file type"}), 400
-        
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(UPLOAD_FOLDER, filename)
-        file.save(file_path)
+        category = request.form["category"]
 
-        # Save file metadata in database
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(filepath)
+
+        # Save file metadata in the database
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO files (filename, filepath) VALUES (?, ?)", (filename, file_path))
+        cursor.execute("INSERT INTO files (filename, filepath, category) VALUES (?, ?, ?)", 
+                       (filename, filepath, category))
         conn.commit()
         conn.close()
 
-        return jsonify({"message": "File uploaded successfully", "filename": filename}), 201
+        return jsonify({"message": "File uploaded successfully", "category": category}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

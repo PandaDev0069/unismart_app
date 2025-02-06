@@ -175,7 +175,7 @@ export const deleteNote = async (noteId) => {
 
 export const uploadFile = async (formData) => {
   try {
-    const response = await fetch(`${BASE_URL}/upload`, {
+    const response = await fetch(`${BASE_URL}/upload_file`, {
       method: "POST",
       body: formData,
     });
@@ -183,9 +183,9 @@ export const uploadFile = async (formData) => {
     return await response.json();
   } catch (error) {
     console.error("Error uploading file:", error);
-    throw error;
   }
-}
+};
+
 
 export const getFiles = async () => {
   try {
