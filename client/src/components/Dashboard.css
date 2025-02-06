@@ -83,12 +83,17 @@
   opacity: 0.7;
 }
 
-/* To-Do List */
+/* Task List Styles */
 .todo-widget {
-  background: #292929;
-  padding: 10px;
+  background: #1e1e1e;
+  padding: 20px;
   border-radius: 8px;
   margin-top: 20px;
+}
+
+.todo-widget h3 {
+  color: #fff;
+  margin-bottom: 15px;
 }
 
 .todo-widget ul {
@@ -96,25 +101,82 @@
   padding: 0;
 }
 
+/* Task List Item Layout */
 .todo-widget li {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 5px;
+  align-items: center;
+  padding: 12px;
+  background: #2d2d2d;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.task-left {
+  display: flex;
+  align-items: center;
   gap: 10px;
+  flex: 1;
 }
 
-.todo-widget li.completed {
-  text-decoration: line-through;
-  color: #bbb;
+.task-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.todo-widget button {
-  background: red;
+/* Task Controls */
+.task-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.task-text {
+  flex: 1;
+  margin-right: 10px;
+}
+
+/* Priority Badge */
+.priority {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: bold;
+  margin-right: 10px;
+  transition: opacity 0.3s ease;
+}
+
+.priority.high {
+  background-color: #ff4444;
   color: white;
+}
+
+.priority.medium {
+  background-color: #ffbb33;
+  color: black;
+}
+
+.priority.low {
+  background-color: #00C851;
+  color: white;
+}
+
+/* Task Buttons */
+.todo-widget button {
+  padding: 5px 10px;
   border: none;
-  padding: 5px;
+  border-radius: 4px;
   cursor: pointer;
+  background: #3d3d3d;
+  color: white;
+  transition: background 0.2s;
+}
+
+.todo-widget button:hover {
+  background: #4d4d4d;
 }
 
 /* Floating Add Button */
@@ -187,4 +249,106 @@
 
 .edit-btn:hover, .delete-btn:hover {
   opacity: 0.7;
+}
+
+/* Priority Styles */
+.priority {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: bold;
+  opacity: 1 !important;
+}
+
+.priority.high {
+  background-color: #ff4444;
+  color: white;
+}
+
+.priority.medium {
+  background-color: #ffbb33;
+  color: black;
+}
+
+.priority.low {
+  background-color: #00C851;
+  color: white;
+}
+
+/* Filter Controls */
+.filter-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #2d2d2d;
+  border-radius: 6px;
+}
+
+.filter-controls select {
+  padding: 6px;
+  border-radius: 4px;
+  background: #3d3d3d;
+  color: white;
+  border: 1px solid #4d4d4d;
+}
+
+.filter-controls button {
+  background: #007bff;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filter-controls button:hover {
+  background: #0056b3;
+}
+
+/* Completed Task Style */
+.todo-widget li.completed .task-text {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Priority and Actions Styling */
+.priority {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: bold;
+  opacity: 1 !important;
+}
+
+.task-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.task-actions button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #3d3d3d;
+  color: white;
+  opacity: 1 !important;
+}
+
+/* Completed Task Styles */
+.todo-widget li.completed {
+  transition: all 0.3s ease;
+}
+
+.todo-widget li.completed .task-left span {
+  text-decoration: line-through;
+  opacity: 0.6;
+  color: #888;
+  transition: all 0.3s ease;
+}
+
+/* Task Text Transition */
+.task-left span {
+  transition: opacity 0.3s ease, color 0.3s ease, text-decoration 0.3s ease;
 }

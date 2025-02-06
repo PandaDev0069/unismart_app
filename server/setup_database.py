@@ -10,8 +10,8 @@ def setup_database():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             text TEXT NOT NULL,
             due_date TEXT NOT NULL,
-            completed INTEGER DEFAULT 0 CHECK (completed IN (0, 1))
-
+            completed INTEGER DEFAULT 0 CHECK (completed IN (0, 1)),
+            priority TEXT DEFAULT 'Medium' CHECK (priority IN ('High', 'Medium', 'Low'))
         )
     ''')
 

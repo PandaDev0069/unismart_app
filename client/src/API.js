@@ -15,6 +15,25 @@ export const getTasksByDate = async (date) => {
   }
 };
 
+export const getTasksByFilters = async ({ date, priority, completed }) => {
+  try {
+    const params = new URLSearchParams();
+    if (date) params.append("date", date);
+    if (priority) params.append("priority", priority);
+    if (completed !== undefined) params.append("completed", completed ? "1" : "0");
+
+    const response = await fetch(`${BASE_URL}/get_tasks?${params.toString()}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.tasks || [];
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    throw error;
+  }
+};
+
 export const getRemindersByDate = async (date) => {
   try {
     const response = await fetch(`${BASE_URL}/get_reminders/${date}`);
@@ -58,12 +77,12 @@ export const addReminder = async (reminderData) => {
   }
 };
 
-export const editTask = async (taskId, newText) => {
+export const editTask = async (taskId, newText, newPriority) => {
   try {
     const response = await fetch(`${BASE_URL}/edit_task/${taskId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: newText }),
+      body: JSON.stringify({ text: newText, priority: newPriority }),
     });
     if (!response.ok) throw new Error("Failed to edit task");
     return await response.json();
@@ -84,6 +103,21 @@ export const editReminder = async (reminderId, text) => {
     return data;
   } catch (error) {
     console.error("Error editing reminder:", error);
+    throw error;
+  }
+};
+
+export const toggleTaskCompletion = async (taskId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/update_task/${taskId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error('Failed to toggle task');
+    return data;
+  } catch (error) {
+    console.error('Error toggling task:', error);
     throw error;
   }
 };

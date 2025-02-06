@@ -3,11 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import ReminderModal from "./ReminderModal";
 import { 
   getTasksByDate, 
+  getTasksByFilters,
   getRemindersByDate, 
   addReminder, 
   addTask as apiAddTask,
   editReminder,
-  editTask as apiEditTask 
+  editTask as apiEditTask,
+  toggleTaskCompletion as apiToggleTaskCompletion
 } from '../API';
 import "./Dashboard.css";
 
@@ -185,31 +187,99 @@ const Dashboard = () => {
   );
 };
 
+
+
+// Add this sorting function before the TaskList component
+const sortByPriority = (tasks) => {
+  const priorityOrder = {
+    'High': 1,
+    'Medium': 2,
+    'Low': 3
+  };
+
+  return tasks.sort((a, b) => {
+    return priorityOrder[a.priority] - priorityOrder[b.priority];
+  });
+};
+
 const TaskList = ({ tasks, setTasks }) => {
   const { date } = useParams();
+  const [editingTask, setEditingTask] = useState(null);
+  const [editText, setEditText] = useState("");
+  const [editPriority, setEditPriority] = useState("");
 
-  const addTask = async () => {
-    const taskText = prompt("Enter new task:");
-    if (taskText) {
-      try {
-        const newTask = { text: taskText, due_date: date };
-        const response = await apiAddTask(newTask);
+  const [filterPriority, setFilterPriority] = useState("");
+  const [filterCompleted, setFilterCompleted] = useState("");
 
-        if (response) {
-          setTasks([...tasks, { id: response.id, text: taskText, completed: false }]);
-        }
-      } catch (error) {
-        console.error("Error adding task:", error);
-      }
+  const applyFilters = async () => {
+    try {
+      const completedValue = filterCompleted === "Completed" ? true : 
+                            filterCompleted === "Not Completed" ? false : 
+                            undefined;
+                            
+      const tasksData = await getTasksByFilters({
+        date,
+        priority: filterPriority,
+        completed: completedValue
+      });
+      setTasks(tasksData);
+    } catch (error) {
+      console.error("Error applying filters:", error);
     }
   };
 
-  const toggleTaskCompletion = (index) => {
-    setTasks((prev) =>
-      prev.map((task, i) =>
-        i === index ? { ...task, completed: !task.completed } : task
-      )
-    );
+  const startEditing = (task) => {
+    setEditingTask(task.id);
+    setEditText(task.text);
+    setEditPriority(task.priority);
+  };
+
+  // Update the addTask function
+const addTask = async () => {
+  const taskText = prompt("Enter new task:");
+  if (!taskText) return;
+
+  const priority = prompt("Set priority: High, Medium, or Low", "Medium");
+  if (!["High", "Medium", "Low"].includes(priority)) {
+    alert("Invalid priority. Defaulting to Medium.");
+    return;
+  }
+
+  if (taskText) {
+    try {
+      const newTask = { text: taskText, due_date: date, priority };
+      const response = await apiAddTask(newTask);
+
+      if (response) {
+        const newTasks = [...tasks, { 
+          id: response.id, 
+          text: taskText, 
+          completed: false, 
+          priority 
+        }];
+        setTasks(sortByPriority(newTasks));
+      }
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
+  }
+};
+
+  const handleToggleCompletion = async (taskId) => {
+    try {
+      const data = await apiToggleTaskCompletion(taskId);
+      if (data.success) {
+        setTasks(prev => 
+          prev.map(task => 
+            task.id === taskId 
+              ? { ...task, completed: !task.completed }
+              : task
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error toggling task completion:", error);
+    }
   };
 
   const deleteTask = async (taskId) => {
@@ -226,42 +296,119 @@ const TaskList = ({ tasks, setTasks }) => {
     }
   };
 
-  const handleEditTask = async (taskId) => {
+  const handleEditTask = async (taskId, currentPriority ) => {
     const task = tasks.find(t => t.id === taskId);
     const newText = prompt("Edit task:", task.text);
     
+    const newPriority = prompt("Edit priority (High, Medium, Low):", currentPriority);
+    if (!["High", "Medium", "Low"].includes(newPriority)) {
+      alert("Invalid priority. Keeping previous value.");
+      return;
+    }
+
+
     if (newText && newText.trim() && newText !== task.text) {
       try {
         await apiEditTask(taskId, newText);
         setTasks(tasks.map(t => 
-          t.id === taskId ? { ...t, text: newText } : t
+          t.id === taskId ? { ...task, text: newText, priority: newPriority } : task
         ));
       } catch (error) {
         console.error("Error editing task:", error);
       }
+    }
+    setEditingTask(null);
+  };
+
+  const saveEdit = async (taskId) => {
+    try {
+      await apiEditTask(taskId, editText, editPriority);
+      setTasks(tasks.map(task => 
+        task.id === taskId 
+          ? { ...task, text: editText, priority: editPriority }
+          : task
+      ));
+      setEditingTask(null);
+    } catch (error) {
+      console.error("Error saving edit:", error);
     }
   };
 
   return (
     <div className="todo-widget">
       <h3>To-Do List</h3>
+      <div className="filter-controls">
+        <select 
+          value={filterPriority}
+          onChange={(e) => setFilterPriority(e.target.value)}
+        >
+          <option value="">All Priorities</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+
+        <select 
+          value={filterCompleted}
+          onChange={(e) => setFilterCompleted(e.target.value)}
+        >
+          <option value="">All Tasks</option>
+          <option value="Completed">Completed</option>
+          <option value="Not Completed">Not Completed</option>
+        </select>
+
+        <button onClick={applyFilters}>Apply Filters</button>
+        <button onClick={addTask}>Add Task</button>
+      </div>
+
       <ul>
-        {tasks.map((task, index) => (
+        {tasks.map((task) => (
           <li key={task.id} className={task.completed ? "completed" : ""}>
-            <input 
-              type="checkbox" 
-              checked={task.completed} 
-              onChange={() => toggleTaskCompletion(index)} 
-            />
-            <span>{task.text}</span>
-            <div className="task-actions">
-              <button onClick={() => handleEditTask(task.id)}>✏️</button>
-              <button onClick={() => deleteTask(task.id)}>❌</button>
+            <div className="task-left">
+              <input 
+                type="checkbox" 
+                checked={task.completed} 
+                onChange={() => handleToggleCompletion(task.id)} 
+              />
+              {editingTask === task.id ? (
+                <input
+                  type="text"
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+              ) : (
+                <span>{task.text}</span>
+              )}
+            </div>
+            
+            <div className="task-right">
+              {editingTask === task.id ? (
+                <>
+                  <select
+                    value={editPriority}
+                    onChange={(e) => setEditPriority(e.target.value)}
+                  >
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                  <button onClick={() => saveEdit(task.id)}>Save</button>
+                </>
+              ) : (
+                <>
+                  <span className={`priority ${task.priority.toLowerCase()}`}>
+                    {task.priority}
+                  </span>
+                  <div className="task-actions">
+                    <button onClick={() => startEditing(task)}>Edit</button>
+                    <button onClick={() => deleteTask(task.id)}>Delete</button>
+                  </div>
+                </>
+              )}
             </div>
           </li>
         ))}
       </ul>
-      <button onClick={addTask}>+ Add Task</button>
     </div>
   );
 };
