@@ -5,6 +5,7 @@ import HomePage from "./components/Home";
 import Calendar from "./components/Calendar";
 import Dashboard from "./components/Dashboard";
 import Notes from "./components/Notes";
+import Files from "./pages/Files";
 
 
 function CodeEditor() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/notes" element={<Notes />} />
           <Route path="/code" element={<CodeEditor />} />
           <Route path="/wellness" element={<Wellness />} />
+          <Route path="/files" element={<Files />} />
         </Routes>
       </div>
     </Router>

@@ -172,3 +172,41 @@ export const deleteNote = async (noteId) => {
     console.error("Error deleting note:", error);
   }
 };
+
+export const uploadFile = async (formData) => {
+  try {
+    const response = await fetch(`${BASE_URL}/upload`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!response.ok) throw new Error("Failed to upload file");
+    return await response.json();
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw error;
+  }
+}
+
+export const getFiles = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/get_files`);
+    if (!response.ok) throw new Error("Failed to fetch files");
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching files:", error);
+    return { files: [] };
+  }
+};
+
+export const deleteFile = async (fileId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/delete_files/${fileId}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error("Failed to delete file");
+    return await response.json();
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    throw error;
+  }
+};

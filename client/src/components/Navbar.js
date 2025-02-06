@@ -27,6 +27,7 @@ function Navbar() {
           <div className="nav-buttons">
             <Link className="btn btn-dark" to="/calendar">Calendar</Link>             
             <Link className="btn btn-dark" to="/notes">Notes</Link>
+            <Link className="btn btn-dark" to="/files">Files</Link>
             <Link className="btn btn-dark" to="/code">Code Editor</Link>
             <Link className="btn btn-dark" to="/wellness">Wellness</Link>
           </div>

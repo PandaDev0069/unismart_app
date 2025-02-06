@@ -34,10 +34,20 @@ def setup_database():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
-
+    # Create files database
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS files (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            filename TEXT NOT NULL,
+            filepath TEXT NOT NULL,
+            category TEXT DEFAULT 'Unsorted'
+        )
+    """)
 
     conn.commit()
     conn.close()
+
+    
 
 def populate_database():
     conn = sqlite3.connect("database.db")
