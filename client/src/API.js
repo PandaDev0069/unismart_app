@@ -1,4 +1,4 @@
-const BASE_URL = process.env.REACT_APP_API_URL || "https://a472-126-66-235-233.ngrok-free.app/api";
+const BASE_URL = "https://a472-126-66-235-233.ngrok-free.app/api";
 
 export const getTasksByDate = async (date) => {
   try {
