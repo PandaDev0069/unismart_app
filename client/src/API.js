@@ -1,4 +1,4 @@
-const BASE_URL = "https://7bf9-126-66-235-233.ngrok-free.app/api";
+const BASE_URL = "https://unismart-app.onrender.com/api";
 
 export const getTasksByDate = async (date) => {
   try {
