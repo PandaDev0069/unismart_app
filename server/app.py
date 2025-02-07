@@ -1,6 +1,6 @@
 from flask import Flask, send_from_directory
 from flask_cors import CORS
-from config import Config  
+from server.config import Config  # Adjust the import path if necessary  
 from routes.tasks import tasks_bp
 from routes.notes import notes_bp
 from routes.reminders import reminders_bp
