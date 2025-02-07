@@ -96,5 +96,5 @@ def populate_database():
 
 if __name__ == "__main__":
     setup_database()
-    # populate_database()
+    populate_database()
     print("✅ Database setup completed.")
