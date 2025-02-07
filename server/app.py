@@ -1,11 +1,16 @@
+import os
+import sys
 from flask import Flask, send_from_directory
 from flask_cors import CORS
-from server.config import Config  # Adjust the import path if necessary  
+
+# Add the server directory to the Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from config import Config
 from routes.tasks import tasks_bp
 from routes.notes import notes_bp
 from routes.reminders import reminders_bp
 from routes.file_upload import file_upload_bp
-import os
 
 def create_app():
     app = Flask(__name__)
