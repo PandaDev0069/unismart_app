@@ -1,6 +1,6 @@
 import os
 import sys
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, jsonify
 from flask_cors import CORS
 
 # Add the server directory to the Python path
@@ -16,12 +16,15 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    # Updated CORS configuration
+    # Updated CORS configuration for both development and production
     CORS(app, resources={
         r"/*": {
-            "origins": ["http://localhost:3000", "http://localhost:3001"],
+            "origins": [
+                "https://unismart.onrender.com",  # Production URL
+                "http://localhost:3000",          # Development URL
+            ],
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            "allow_headers": ["Content-Type"],
+            "allow_headers": ["Content-Type", "Authorization"],
             "supports_credentials": True
         }
     })
@@ -41,6 +44,15 @@ def create_app():
     app.register_blueprint(notes_bp)
     app.register_blueprint(reminders_bp)
     app.register_blueprint(file_upload_bp)
+
+    # Error handling
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({"error": "Not found"}), 404
+
+    @app.errorhandler(500)
+    def internal_error(error):
+        return jsonify({"error": "Internal server error"}), 500
 
     return app
 
