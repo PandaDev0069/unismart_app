@@ -19,11 +19,7 @@ def create_app():
     # Updated CORS configuration
     CORS(app, resources={
         r"/*": {
-            "origins": [
-                "http://localhost:3000",
-                "http://localhost:3001",
-                "http://192.168.11.7:3000"  # Add your local IP
-            ],
+            "origins": ["http://localhost:3000", "http://localhost:3001"],
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type"],
             "supports_credentials": True
@@ -51,9 +47,4 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0", 
-        port=5000, 
-        debug=True,
-        ssl_context=('server.crt', 'server.key')
-    )
+    app.run(host="0.0.0.0", port=5000, debug=True)
