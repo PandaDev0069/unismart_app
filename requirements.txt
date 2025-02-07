@@ -1,7 +1,6 @@
 flask
 flask-cors
 gunicorn
-sqlite3
 werkzeug
 requests
 pymupdf
