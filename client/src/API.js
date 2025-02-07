@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.11.7:5000/api";
+const BASE_URL = "https://192.168.11.7:5000/api";
 
 export const getTasksByDate = async (date) => {
   try {
